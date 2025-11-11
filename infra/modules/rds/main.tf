@@ -12,6 +12,7 @@ resource "aws_db_instance" "this" {
   deletion_protection  = false
   multi_az             = false
   storage_encrypted    = false
+  skip_final_snapshot = true
 }
 
 resource "aws_db_subnet_group" "this" {
