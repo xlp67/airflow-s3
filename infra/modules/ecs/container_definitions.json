@@ -1,0 +1,533 @@
+[
+  {
+    "name": "postgres",
+    "image": "postgres:16",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "POSTGRES_USER",
+        "value": "airflow"
+      },
+      {
+        "name": "POSTGRES_PASSWORD",
+        "value": "airflow"
+      },
+      {
+        "name": "POSTGRES_DB",
+        "value": "airflow"
+      }
+    ],
+    "portMappings": []
+  },
+  {
+    "name": "redis",
+    "image": "redis:7.2-bookworm",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [],
+    "portMappings": []
+  },
+  {
+    "name": "airflow-apiserver",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": "${_PIP_ADDITIONAL_REQUIREMENTS:-}"
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      }
+    ],
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 8080,
+        "protocol": "tcp"
+      }
+    ]
+  },
+  {
+    "name": "airflow-scheduler",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": "${_PIP_ADDITIONAL_REQUIREMENTS:-}"
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      }
+    ],
+    "portMappings": []
+  },
+  {
+    "name": "airflow-dag-processor",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": "${_PIP_ADDITIONAL_REQUIREMENTS:-}"
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      }
+    ],
+    "portMappings": []
+  },
+  {
+    "name": "airflow-worker",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": "${_PIP_ADDITIONAL_REQUIREMENTS:-}"
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      },
+      {
+        "name": "DUMB_INIT_SETSID",
+        "value": "0"
+      }
+    ],
+    "portMappings": []
+  },
+  {
+    "name": "airflow-triggerer",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": "${_PIP_ADDITIONAL_REQUIREMENTS:-}"
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      }
+    ],
+    "portMappings": []
+  },
+  {
+    "name": "airflow-init",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      },
+      {
+        "name": "_AIRFLOW_DB_MIGRATE",
+        "value": "true"
+      },
+      {
+        "name": "_AIRFLOW_WWW_USER_CREATE",
+        "value": "true"
+      },
+      {
+        "name": "_AIRFLOW_WWW_USER_USERNAME",
+        "value": "${_AIRFLOW_WWW_USER_USERNAME:-airflow}"
+      },
+      {
+        "name": "_AIRFLOW_WWW_USER_PASSWORD",
+        "value": "${_AIRFLOW_WWW_USER_PASSWORD:-airflow}"
+      }
+    ],
+    "portMappings": []
+  },
+  {
+    "name": "airflow-cli",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": "${_PIP_ADDITIONAL_REQUIREMENTS:-}"
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      },
+      {
+        "name": "CONNECTION_CHECK_MAX_COUNT",
+        "value": "0"
+      }
+    ],
+    "portMappings": []
+  },
+  {
+    "name": "flower",
+    "image": "apache/airflow:3.1.2",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "environment": [
+      {
+        "name": "AIRFLOW__CORE__EXECUTOR",
+        "value": "CeleryExecutor"
+      },
+      {
+        "name": "AIRFLOW__CORE__AUTH_MANAGER",
+        "value": "airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager"
+      },
+      {
+        "name": "AIRFLOW__DATABASE__SQL_ALCHEMY_CONN",
+        "value": "postgresql+psycopg2://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__RESULT_BACKEND",
+        "value": "db+postgresql://airflow:airflow@postgres/airflow"
+      },
+      {
+        "name": "AIRFLOW__CELERY__BROKER_URL",
+        "value": "redis://:@redis:6379/0"
+      },
+      {
+        "name": "AIRFLOW__CORE__FERNET_KEY",
+        "value": ""
+      },
+      {
+        "name": "AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION",
+        "value": "true"
+      },
+      {
+        "name": "AIRFLOW__CORE__LOAD_EXAMPLES",
+        "value": "false"
+      },
+      {
+        "name": "AIRFLOW__CORE__EXECUTION_API_SERVER_URL",
+        "value": "http://airflow-apiserver:8080/execution/"
+      },
+      {
+        "name": "AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK",
+        "value": "true"
+      },
+      {
+        "name": "_PIP_ADDITIONAL_REQUIREMENTS",
+        "value": "${_PIP_ADDITIONAL_REQUIREMENTS:-}"
+      },
+      {
+        "name": "AIRFLOW_CONFIG",
+        "value": "/opt/airflow/config/airflow.cfg"
+      }
+    ],
+    "portMappings": [
+      {
+        "containerPort": 5555,
+        "hostPort": 5555,
+        "protocol": "tcp"
+      }
+    ]
+  }
+]
