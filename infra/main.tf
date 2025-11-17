@@ -4,23 +4,23 @@ module "vpc" {
     vpc_name = "lm-vpc"
 }
 
-# module "subnet-1" {
-#   source            = "./modules/subnet"
-#   subnet_name       = "ml-subnet-1"
-#   subnet_cidr_block = "10.1.1.0/24"
-#   availability_zone = "us-east-1a"
-#   vpc_id            = module.vpc.vpc_id
-#   depends_on        = [module.vpc]
+module "alb" {
+  source                = "./modules/alb"
+  launch_template_name  = "ecs-launch-template"
+  ami_id                = "ami-0c02fb55956c7d316"
+  instance_type         = "t2.micro"
+  subnets_id            = module.vpc.subnets-id
+  security_group_ids    = [module.vpc.vpc-sg.id]
+  depends_on           = [module.vpc]
+}
+
+# module "ecs" {
+#   source              = "./modules/ecs"
+#   subnets_id          = [module.subnet-1.subnet_id, module.subnet-2.subnet_id]
+#   security_group_ids  = [module.vpc.vpc-sg.id]
+#   depends_on          = [module.alb]
 # }
 
-# module "subnet-2" {
-#   source            = "./modules/subnet"
-#   subnet_name       = "ml-subnet-2"
-#   subnet_cidr_block = "10.1.2.0/24"
-#   availability_zone = "us-east-1b"
-#   vpc_id            = module.vpc.vpc_id
-#   depends_on        = [module.vpc]
-# }
 
 # module "data-wharehouse" {
 #   source  = "./modules/rds"
@@ -36,16 +36,3 @@ module "vpc" {
 
 #   depends_on = [module.vpc]
 # }
-
-module "raw-layer" {
-  source    = "./modules/s3"
-  bucket_id = "raw-layer"
-}
-module "silver-layer" {
-  source    = "./modules/s3"
-  bucket_id = "silver-layer"
-}
-module "gold-layer" {
-  source    = "./modules/s3"
-  bucket_id = "gold-layer"
-}

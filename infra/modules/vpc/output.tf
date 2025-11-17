@@ -12,3 +12,7 @@ output "vpc_id" {
   description = "ID da VPC criada"
   value       = aws_vpc.this.id
 }
+
+output "subnets-id" {
+  value       = [aws_subnet.subnet-1.id, aws_subnet.subnet-2.id]
+}
