@@ -4,23 +4,14 @@ module "vpc" {
     vpc_name = "lm-vpc"
 }
 
-module "alb" {
-  source                = "./modules/alb"
-  launch_template_name  = "ecs-launch-template"
-  ami_id                = "ami-0c02fb55956c7d316"
-  instance_type         = "t2.micro"
-  subnets_id            = module.vpc.subnets-id
-  security_group_ids    = [module.vpc.vpc-sg.id]
-  depends_on           = [module.vpc]
+module "s3" {
+    source = "./modules/s3"
+    bucket_id = "lm-bucket-xlp67"
 }
 
-# module "ecs" {
-#   source              = "./modules/ecs"
-#   subnets_id          = [module.subnet-1.subnet_id, module.subnet-2.subnet_id]
-#   security_group_ids  = [module.vpc.vpc-sg.id]
-#   depends_on          = [module.alb]
-# }
-
+output "s3_bucket_arn" {
+  value = module.s3.bucket_name_arn
+  }
 
 # module "data-wharehouse" {
 #   source  = "./modules/rds"
@@ -32,7 +23,5 @@ module "alb" {
 #   username       = var.username
 #   password       = var.password
 #   subnets_group = [module.subnet-1.subnet_id, module.subnet-2.subnet_id]
-
-
 #   depends_on = [module.vpc]
 # }

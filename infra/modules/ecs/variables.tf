@@ -1,2 +1,7 @@
-variable "subnets_id" {}
-variable "security_group_ids" {}
+variable "subnets_id" {
+  type = list(string)
+}
+
+variable "security_group_ids" {
+  type = list(string)
+}

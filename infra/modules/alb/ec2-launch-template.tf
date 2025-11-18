@@ -1,5 +1,5 @@
 resource "aws_launch_template" "ec2_launch_template" {
-  name_prefix   = "${var.launch_template_name}"
+  name_prefix   = "launch_template"
   image_id      = var.ami_id
   instance_type = var.instance_type
 
@@ -8,13 +8,12 @@ resource "aws_launch_template" "ec2_launch_template" {
   iam_instance_profile {
     name = "ec2-role-instance-profile"
   }
-  tags_especications {
-    resource_type = "instance"
-    tags = {
-      Name = "${var.launch_template_name}-instance"
-      To = "ECS"
-    }
-  }
+
   user_data = filebase64("${path.module}/ecs.sh")
 }
 
+
+resource "aws_key_pair" "key-pair" {
+  key_name   = "key-pair"
+  public_key = file("${path.module}/id_rsa.pub")
+}

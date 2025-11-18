@@ -26,7 +26,7 @@ resource "aws_lb" "ecs-alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.security_group_ids
-  subnets            = [var.subnets_id]
+  subnets            = var.subnets_id
 
   tags = {
     Name = "ecs-alb"
@@ -64,4 +64,34 @@ resource "aws_lb_listener" "ecs-listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ecs-tg.arn
   }
+}
+
+data "aws_iam_policy_document" "ec2_assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+
+resource "aws_iam_role" "ec2_role" {
+  name = "ec2-role"
+  assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
+}
+
+resource "aws_iam_policy_attachment" "ec2_role_attach" {
+  name       = "ec2-role-attachment"
+  roles      = [aws_iam_role.ec2_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+}
+
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2-role-instance-profile"
+  role = aws_iam_role.ec2_role.name
 }
